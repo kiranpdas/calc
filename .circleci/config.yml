@@ -1,0 +1,20 @@
+version: 2
+
+jobs:
+  build:
+    working_directory: ~/calc
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
+      - run:
+          command: |
+            sudo pip install virtualenv
+            virtualenv .venv
+            pip install -r requirements.txt
+            make test
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+          destination: tr1
