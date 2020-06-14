@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "/Users/kprasannadas/Documents/dev/kp_projects/calc/.venv/bin/python3.7",
+    "python.linting.pylintEnabled": true,
+    "python.linting.pycodestyleEnabled": true,
+    "python.linting.enabled": true
+}
