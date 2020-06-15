@@ -2,6 +2,7 @@ build: clean
 	mkdir ./dist
 	cp ./src/main.py ./dist
 	cd ./src && zip -x main.py -r ../dist/app.zip .
+	cd .lib && zip -r ../dist/lib.zip .
 
 test:
 	python -m unittest tests/test_calc.py
