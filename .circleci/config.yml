@@ -1,21 +1,69 @@
 version: 2
 
+workflows:
+
+#############################################################
+# Shared jobs and configuration
+#############################################################
+
+attach_workspace: &attach_workspace
+  attach_workspace:
+    at: '.'
+
+persist_workspace: &persist_workspace
+  persist_to_workspace:
+    root: '.'
+    paths: [ '.' ]
+
+#############################################################
+# build jobs
+#############################################################
 jobs:
-  build:
+  checkout_code:
     working_directory: ~/calc
     docker:
       - image: circleci/python:3.6.4
     steps:
       - checkout
-      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - *persist_workspace
+  
+  - run: sudo chown -R circleci:circleci /usr/local/bin
       - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+
       - run:
           command: |
             pip install -r requirements.txt
             make test
             mkdir test_results
-      - store_test_results:
-          path: test_results
-      - store_artifacts:
-          path: test_results
-          destination: tr1
+
+  set_permissions:
+    working_directory: ~/calc
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - *attach_workspace
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.6/site-packages
+      - *persist_workspace
+  
+  install_dependencies:
+    working_directory: ~/calc
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - *attach_workspace
+      - run: pip install -r requirements.txt
+      - *persist_workspace
+
+  build:
+    working_directory: ~/calc
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - *attach_workspace
+      - run: make build
+ 
+
+
+
+
