@@ -1,6 +1,16 @@
 version: 2
 
 workflows:
+  version: 2
+  build-calc:
+    jobs:
+      - checkout_code
+      - set_permissions:
+          requires: [checkout_code]
+      - install_dependencies:
+          requires: [set_permissions]
+      - build:
+          requires: [install_dependencies]
 
 #############################################################
 # Shared jobs and configuration
