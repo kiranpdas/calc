@@ -8,12 +8,12 @@ workflows:
   build-calc:
     jobs:
       - checkout_code
-      - set_permissions:
-          requires: [checkout_code]
       - install_dependencies:
-          requires: [set_permissions]
-      - build:
+          requires: [checkout_code]
+      - unit_tests:
           requires: [install_dependencies]
+      - build:
+          requires: [unit_tests]
 
 #############################################################
 # Shared jobs and configuration
@@ -47,6 +47,15 @@ jobs:
     steps:
       - *attach_workspace
       - run: pip install -r requirements.txt -t .lib/
+      - *persist_workspace
+
+  unit_tests:
+    working_directory: ~/calc
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - *attach_workspace
+      - run: make test
       - *persist_workspace
 
   build:
